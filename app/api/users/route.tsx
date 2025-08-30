@@ -23,7 +23,7 @@ export async function POST(req:NextRequest) {
         credits :10
         // @ts-ignore
        }).returning({usersTable})
-       return NextResponse.json(result);
+       return NextResponse.json(result[0]?.usersTabble);
      }
      return NextResponse.json(users[0]);
     }
