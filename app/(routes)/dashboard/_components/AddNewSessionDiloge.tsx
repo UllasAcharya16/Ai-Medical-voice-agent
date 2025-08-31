@@ -18,6 +18,7 @@ import axios from 'axios'
 import DoctorAgentCard, { DoctorAgent } from './DoctorAgentCard'
 import { Loader, Loader2 } from 'lucide-react'
 import SuggestedDoctorCard from './SuggestedDoctorCard';
+import { useRouter } from 'next/navigation'
 
 
 function AddNewSessionDiloge() {
@@ -25,6 +26,8 @@ function AddNewSessionDiloge() {
   const [loading, setLoading] = useState(false)
   const [suggestedDoctors,setSuggestedDoctors]=useState<DoctorAgent[]>();
   const [selectedDoctor,setSelectedDoctor] = useState <DoctorAgent>();
+
+  const router = useRouter();
 
   const OnClickNext = async () => {
     setLoading(true)
@@ -46,6 +49,9 @@ function AddNewSessionDiloge() {
     if(result.data?.sessionId){
 
       console.log(result.data.sessionId);
+ 
+      router.push('/dashboard/medical-agent/'+result.data.sessionId);
+
     }
     setLoading(false);
   }
@@ -76,7 +82,9 @@ function AddNewSessionDiloge() {
                  {suggestedDoctors.map((doctor,index)=>(
 
                     <SuggestedDoctorCard doctorAgent={doctor} key={index}
-                    setSelectedDoctor={()=>setSelectedDoctor(doctor)} />
+                    setSelectedDoctor={()=>setSelectedDoctor(doctor)}
+                    //@ts-ignore
+                    selectedDoctor = {selectedDoctor}/>
 
                  ))}
               </div>
@@ -86,13 +94,13 @@ function AddNewSessionDiloge() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose>
-              <Button variant={'outline'}>Cancel</Button>
+            <DialogClose asChild>
+              <Button type="button" variant={'outline'}>Cancel</Button>
             </DialogClose>
             {!suggestedDoctors? <Button disabled={!note|| loading} onClick={()=>OnClickNext()}>     
               Next {loading ?<Loader2 className='animate-spin' />: <IconArrowRight/>}
             </Button>:
-            <Button disabled={loading} onClick={()=>onStartConsultation}>
+            <Button disabled={loading ||!selectedDoctor } onClick={()=>onStartConsultation()}>
             Start Consultation{loading ? <Loader2 className="animate-spin" /> : <IconArrowRight/>}
            </Button>
            }
