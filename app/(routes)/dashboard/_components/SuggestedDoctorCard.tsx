@@ -1,6 +1,6 @@
 import React from 'react'
 import { DoctorAgent } from './DoctorAgentCard'
-import Image from 'next/image'
+import Image from 'next/image';
 
 
 
